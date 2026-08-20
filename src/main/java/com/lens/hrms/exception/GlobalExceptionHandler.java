@@ -4,6 +4,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,6 +32,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> generic(Exception ex) {
         return error(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", Map.of());
     }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<?> handleAuthorizationDenied(
+        AuthorizationDeniedException ex) {
+
+    return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
+            .body(Map.of(
+                    "status", 403,
+                    "message", "Access denied"
+            ));
+   }
 
     private ResponseEntity<ErrorResponse> error(HttpStatus status, String message, Map<String,String> errors) {
         return ResponseEntity.status(status)

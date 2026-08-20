@@ -3,7 +3,8 @@ package com.lens.hrms.controller;
 import com.lens.hrms.dto.EmployeeRequest;
 import com.lens.hrms.dto.EmployeeResponse;
 import com.lens.hrms.service.EmployeeServiceInterface;
-
+import com.lens.hrms.security.JwtService;
+import com.lens.hrms.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +46,11 @@ class EmployeeControllerTest {
     @MockBean
     private EmployeeServiceInterface service;
 
+    @MockBean
+    private JwtService jwtService;
 
-    // ============================================================
-    // TEST SECURITY CONFIGURATION
-    // ============================================================
+    @MockBean
+    private UserRepository userRepository;
 
     @TestConfiguration
     @EnableMethodSecurity
@@ -61,13 +63,12 @@ class EmployeeControllerTest {
             http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                    .anyRequest().authenticated()
+                    .anyRequest().permitAll()
                 );
 
             return http.build();
         }
     }
-
 
     // ============================================================
     // GET
