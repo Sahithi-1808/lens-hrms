@@ -10,7 +10,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmployeeService {
+public class EmployeeService implements EmployeeServiceInterface {
     private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
     private final EmployeeRepository repository;
 
