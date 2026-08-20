@@ -1,7 +1,7 @@
 package com.lens.hrms.controller;
 
 import com.lens.hrms.dto.*;
-import com.lens.hrms.service.EmployeeService;
+import com.lens.hrms.service.EmployeeServiceInterface;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.*;
@@ -13,8 +13,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RequestMapping("/api/employees")
 @SecurityRequirement(name = "bearerAuth")
 public class EmployeeController {
-    private final EmployeeService service;
-    public EmployeeController(EmployeeService service) { this.service = service; }
+    private final EmployeeServiceInterface service;
+    public EmployeeController(EmployeeServiceInterface service) { this.service = service; }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','HR')")
