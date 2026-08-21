@@ -15,6 +15,16 @@ public class GlobalExceptionHandler {
         return error(HttpStatus.NOT_FOUND, ex.getMessage(), Map.of());
     }
 
+    @ExceptionHandler(DepartmentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> departmentNotFound(
+            DepartmentNotFoundException ex) {
+        return error(
+            HttpStatus.NOT_FOUND,
+            ex.getMessage(),
+            Map.of()
+        );
+    }
+
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ErrorResponse> duplicate(DuplicateEmailException ex) {
         return error(HttpStatus.CONFLICT, ex.getMessage(), Map.of());
@@ -34,15 +44,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<?> handleAuthorizationDenied(
+    public ResponseEntity<ErrorResponse> handleAuthorizationDenied(
         AuthorizationDeniedException ex) {
 
-    return ResponseEntity
-            .status(HttpStatus.FORBIDDEN)
-            .body(Map.of(
-                    "status", 403,
-                    "message", "Access denied"
-            ));
+    return error(
+            HttpStatus.FORBIDDEN,
+            "Access denied",
+            Map.of()
+    );
    }
 
     private ResponseEntity<ErrorResponse> error(HttpStatus status, String message, Map<String,String> errors) {

@@ -13,7 +13,12 @@ public interface EmployeeServiceInterface {
             int size,
             String sortBy,
             String direction,
-            String search
+            String search,
+            String department,
+            String designation,
+            String status,
+            Double minSalary,
+            Double maxSalary
     );
 
     EmployeeResponse getById(Long id);
