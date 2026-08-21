@@ -2,6 +2,7 @@ package com.lens.hrms.service;
 
 import com.lens.hrms.dto.EmployeeRequest;
 import com.lens.hrms.dto.EmployeeResponse;
+import com.lens.hrms.entity.Department;
 import com.lens.hrms.entity.Employee;
 import com.lens.hrms.exception.DuplicateEmailException;
 import com.lens.hrms.exception.EmployeeNotFoundException;
@@ -19,6 +20,10 @@ public class InMemoryEmployeeService {
         this.repository = repository;
     }
 
+    // ============================================================
+    // CREATE
+    // ============================================================
+
     public EmployeeResponse create(EmployeeRequest request) {
 
         if (repository.existsByEmail(request.getEmail())) {
@@ -26,12 +31,17 @@ public class InMemoryEmployeeService {
         }
 
         Employee employee = new Employee();
+
         copy(request, employee);
 
         Employee saved = repository.save(employee);
 
         return toResponse(saved);
     }
+
+    // ============================================================
+    // GET ALL
+    // ============================================================
 
     public List<EmployeeResponse> getAll() {
 
@@ -41,12 +51,22 @@ public class InMemoryEmployeeService {
                 .toList();
     }
 
+    // ============================================================
+    // GET BY ID
+    // ============================================================
+
     public EmployeeResponse getById(Long id) {
 
         return toResponse(find(id));
     }
 
-    public EmployeeResponse update(Long id, EmployeeRequest request) {
+    // ============================================================
+    // UPDATE
+    // ============================================================
+
+    public EmployeeResponse update(
+            Long id,
+            EmployeeRequest request) {
 
         Employee employee = find(id);
 
@@ -63,12 +83,20 @@ public class InMemoryEmployeeService {
         return toResponse(updated);
     }
 
+    // ============================================================
+    // DELETE
+    // ============================================================
+
     public void delete(Long id) {
 
         find(id);
 
         repository.delete(id);
     }
+
+    // ============================================================
+    // FIND
+    // ============================================================
 
     private Employee find(Long id) {
 
@@ -81,15 +109,30 @@ public class InMemoryEmployeeService {
         return employee;
     }
 
-    private void copy(EmployeeRequest request, Employee employee) {
+    // ============================================================
+    // COPY REQUEST -> ENTITY
+    // ============================================================
+
+    private void copy(
+            EmployeeRequest request,
+            Employee employee) {
 
         employee.setName(request.getName());
         employee.setEmail(request.getEmail());
-        employee.setDepartment(request.getDepartment());
+
+        Department department =
+                new Department(request.getDepartment().trim());
+
+        employee.setDepartment(department);
+
         employee.setDesignation(request.getDesignation());
         employee.setSalary(request.getSalary());
         employee.setStatus(request.getStatus());
     }
+
+    // ============================================================
+    // ENTITY -> RESPONSE
+    // ============================================================
 
     private EmployeeResponse toResponse(Employee employee) {
 
@@ -97,7 +140,7 @@ public class InMemoryEmployeeService {
                 employee.getId(),
                 employee.getName(),
                 employee.getEmail(),
-                employee.getDepartment(),
+                employee.getDepartment().getName(),
                 employee.getDesignation(),
                 employee.getSalary(),
                 employee.getStatus()
